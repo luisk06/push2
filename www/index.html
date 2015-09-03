@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>com.PhoneGap.c2dm</title>
+        <title>com.push</title>
     </head>
     <body>
 
@@ -24,32 +24,13 @@ NOTE:
             var pushNotification;
             
             function onDeviceReady() {
-                $("#app-status-ul").append('<li>Device ok. Event Activated.</li>');
-                
-				document.addEventListener("backbutton", function(e)
-				{
-                	$("#app-status-ul").append('<li>backbutton clicked.</li>');
-  					
-      				if( $("#home").length > 0)
-					{
-						// call this to get a new token each time. don't call it to reuse existing token.
-						//pushNotification.unregister(successHandler, errorHandler);
-						e.preventDefault();
-						navigator.app.exitApp();
-					}
-					else
-					{
-						navigator.app.backHistory();
-					}
-				}, false);
 			
 				try 
 				{ 
                 	pushNotification = window.plugins.pushNotification;
-		      $("#app-status-ul").append('<li>Registering ' + device.platform + '</li>');
-                	if (device.platform == 'android' || device.platform == 'Android' ||
-                            device.platform == 'amazon-fireos' ) {
-			pushNotification.register(successHandler, errorHandler, {"senderID":"321111271739","ecb":"onNotification"});		// required!
+		      				$("#app-status-ul").append('<li>Registering ' + device.platform + '</li>');
+                	if (device.platform == 'android' || device.platform == 'Android' || device.platform == 'amazon-fireos' ) {
+							pushNotification.register(successHandler, errorHandler, {"senderID":"321111271739","ecb":"onNotification"});		// required!
 					} else {
                     	pushNotification.register(tokenHandler, errorHandler, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});	// required!
                 	}
@@ -63,23 +44,7 @@ NOTE:
             }
             
             // handle APNS notifications for iOS
-            function onNotificationAPN(e) {
-                if (e.alert) {
-                     $("#app-status-ul").append('<li>push-notification: ' + e.alert + '</li>');
-                     // showing an alert also requires the org.apache.cordova.dialogs plugin
-                     navigator.notification.alert(e.alert);
-                }
-                    
-                if (e.sound) {
-                    // playing a sound also requires the org.apache.cordova.media plugin
-                    var snd = new Media(e.sound);
-                    snd.play();
-                }
-                
-                if (e.badge) {
-                    pushNotification.setApplicationIconBadgeNumber(successHandler, e.badge);
-                }
-            }
+           
             
             // handle GCM notifications for Android
             function onNotification(e) {
@@ -90,7 +55,7 @@ NOTE:
                     case 'registered':
 					if ( e.regid.length > 0 )
 					{
-						$("#app-status-ul").append('<li>REGISTERING -> REGID: \n\n' + e.regid + "\n\n</li>");
+						$("#app-status-ul").append('<li>REGISTERING -> REGID: \n\n' + '<div id="reg_id">' + e.regid +'</div>'+ "\n\n</li>");
 						// Your GCM push server needs to know the regID before it can push to this device
 						// here is where you might want to send it the regID for later use.
 						console.log("regID = " + e.regid);
@@ -163,6 +128,27 @@ NOTE:
 					<li>Cordova PushNotification Plugin Demo</li>
 				</ul>
 			</div>
+            <div>
+            	<button id="sendid" name="sendid">Send id</button>
+            </div>
 		</div>
     </body>
+    
+    <script>
+		$('#sendid').click(function(){
+			var reg = $('#reg_id').html();
+                        $.ajax({
+                            type: 'POST',
+                            data: {reg_id: reg},
+                            url: 'http://leanstaffing.com/testpush/saveid.php',
+                            success: function(data){
+                                console.log(data);
+                            },
+                            error: function(){
+                                console.log(data);
+                            }})
+		
+			});
+	</script>
+    
 </html>

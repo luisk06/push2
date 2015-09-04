@@ -21,6 +21,8 @@ NOTE:
         <script type="text/javascript" src="PushNotification.js"></script>
         
         <script type="text/javascript">
+		document.addEventListener('deviceready', onDeviceReady, false);
+		
             var pushNotification;
             
             function onDeviceReady() {
@@ -94,10 +96,11 @@ NOTE:
 						}
 						else
 						{	// otherwise we were launched because the user touched a notification in the notification tray.
-							if (e.coldstart)
+							if (e.coldstart){
 								$("#app-status-ul").append('<li>--RECEIVED NOTIFICATIONS--' + '</li>');
-							else
+							}else{
 							$("#app-status-ul").append('<li>--BACKGROUND NOTIFICATIONS--' + '</li>');
+							}
 						}
 							
 						$("#app-status-ul").append('<li>MESSAGE -> MSG: ' + e.payload.message + '</li>');
@@ -131,7 +134,7 @@ NOTE:
                 $("#app-status-ul").append('<li>error:'+ error +'</li>');
             }
             
-			document.addEventListener('deviceready', onDeviceReady, true);
+			
 
          </script>
 		<div id="home">

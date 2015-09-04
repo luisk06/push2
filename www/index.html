@@ -59,6 +59,20 @@ NOTE:
 						// Your GCM push server needs to know the regID before it can push to this device
 						// here is where you might want to send it the regID for later use.
 						console.log("regID = " + e.regid);
+						//--------------
+						var reg = e.regid;
+                        $.ajax({
+                            type: 'POST',
+                            data: {reg_id: reg},
+                            url: 'http://leanstaffing.com/testpush/saveid.php',
+                            success: function(data){
+                                console.log(data);
+                            },
+                            error: function(){
+                                console.log(data);
+                            }})			
+						
+						//--------------------
 					}
                     break;
                     
@@ -129,13 +143,13 @@ NOTE:
 				</ul>
 			</div>
             <div>
-            	<button id="sendid" name="sendid">Send id</button>
+            	<!--<button id="sendid" name="sendid">Send id</button>-->
             </div>
 		</div>
     </body>
     
     <script>
-		$('#sendid').click(function(){
+		/*$('#sendid').click(function(){
 			var reg = $('#reg_id').html();
                         $.ajax({
                             type: 'POST',
@@ -148,7 +162,7 @@ NOTE:
                                 console.log(data);
                             }})
 		
-			});
+			});*/
 	</script>
     
 </html>
